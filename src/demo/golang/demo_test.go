@@ -27,7 +27,7 @@ func doTestDemo(t *testing.T) error {
 		return err
 	}
 
-	db, err := dd.OpenDatabase("demo", true)
+	db, err := dd.OpenDatabase("demo-db-1", true)
 	if err != nil {
 		return err
 	}
@@ -98,7 +98,7 @@ type DemoRepoImpl struct {
 func (inst *DemoRepoImpl) init() DemoRepo {
 
 	tableOpen := &ptable.TableOpen{}
-	tableOpen.TableName = "demo"
+	tableOpen.TableName = "table1demo"
 	tableOpen.DoInit = true
 	tableOpen.PrimaryKey = "id"
 

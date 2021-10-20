@@ -42,7 +42,7 @@ func (inst *databaseImpl) OpenTable(p *ptable.TableOpen) (ptable.Table, error) {
 	if len(name) < 1 {
 		return nil, errors.New("bad table name: " + name)
 	}
-	file := inst.dir.GetChild(name)
+	file := inst.dir.GetChild(name + ".ptable")
 	p.File = file
 	p.TableName = name
 	return inst.context.TableFactory.Open(p)
