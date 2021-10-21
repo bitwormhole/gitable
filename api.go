@@ -23,7 +23,8 @@ type Session interface {
 	DB() Database
 	GetProperties(table Table) collection.Properties
 	ListIDs(table Table) []string
-	GetRow(table Table, key string) (Row, error)
+	GetRow(table Table, key string) Row
+	GetRowRequired(table Table, key string) (Row, error)
 }
 
 // SessionFactory 会话工厂

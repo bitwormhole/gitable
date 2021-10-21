@@ -114,28 +114,26 @@ func (inst *DemoRepoImpl) init() DemoRepo {
 	return inst
 }
 
-func (inst *DemoRepoImpl) load(row ptable.Row, e *DemoEntity) error {
+func (inst *DemoRepoImpl) load(row ptable.Row, e *DemoEntity) {
 	e.id = inst.pk.Get(row)
 	e.f1 = inst.f1.Get(row)
 	e.f2 = inst.f2.Get(row)
 	e.f3 = inst.f3.Get(row)
-	return nil
 }
 
-func (inst *DemoRepoImpl) save(row ptable.Row, e *DemoEntity) error {
+func (inst *DemoRepoImpl) save(row ptable.Row, e *DemoEntity) {
 	inst.pk.Set(row, e.id)
 	inst.f1.Set(row, e.f1)
 	inst.f2.Set(row, e.f2)
 	inst.f3.Set(row, e.f3)
-	return nil
 }
 
 func (inst *DemoRepoImpl) Insert(e *DemoEntity) (*DemoEntity, error) {
 	session := inst.session
 	table := inst.table
-	row, err := session.GetRow(table, strconv.Itoa(e.id))
-	if err != nil {
-		return nil, err
+	row := session.GetRow(table, strconv.Itoa(e.id))
+	if row.Exists() {
+		return nil, errors.New("row is exists")
 	}
 	inst.save(row, e)
 	return e, nil
@@ -144,7 +142,7 @@ func (inst *DemoRepoImpl) Insert(e *DemoEntity) (*DemoEntity, error) {
 func (inst *DemoRepoImpl) Delete(id string) error {
 	session := inst.session
 	table := inst.table
-	row, err := session.GetRow(table, id)
+	row, err := session.GetRowRequired(table, id)
 	if err != nil {
 		return err
 	}
@@ -158,12 +156,9 @@ func (inst *DemoRepoImpl) Delete(id string) error {
 func (inst *DemoRepoImpl) Update(id string, e *DemoEntity) (*DemoEntity, error) {
 	session := inst.session
 	table := inst.table
-	row, err := session.GetRow(table, strconv.Itoa(e.id))
+	row, err := session.GetRowRequired(table, strconv.Itoa(e.id))
 	if err != nil {
 		return nil, err
-	}
-	if !row.Exists() {
-		return nil, errors.New("not exists")
 	}
 	inst.save(row, e)
 	return e, nil
@@ -172,12 +167,9 @@ func (inst *DemoRepoImpl) Update(id string, e *DemoEntity) (*DemoEntity, error) 
 func (inst *DemoRepoImpl) Find(id string) (*DemoEntity, error) {
 	session := inst.session
 	table := inst.table
-	row, err := session.GetRow(table, id)
+	row, err := session.GetRowRequired(table, id)
 	if err != nil {
 		return nil, err
-	}
-	if !row.Exists() {
-		return nil, errors.New("not exists")
 	}
 	e := &DemoEntity{}
 	inst.load(row, e)
@@ -191,7 +183,7 @@ func (inst *DemoRepoImpl) All() []*DemoEntity {
 	list := make([]*DemoEntity, 0)
 	for _, id := range ids {
 		e := &DemoEntity{}
-		row, err := session.GetRow(table, id)
+		row, err := session.GetRowRequired(table, id)
 		if err != nil {
 			break
 		}

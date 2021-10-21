@@ -135,13 +135,22 @@ func (inst *sessionImpl) GetProperties(table ptable.Table) collection.Properties
 	return c.getProps()
 }
 
-func (inst *sessionImpl) GetRow(table ptable.Table, key string) (ptable.Row, error) {
+func (inst *sessionImpl) GetRow(table ptable.Table, key string) ptable.Row {
 	row := &rowImpl{}
 	row.table = table
 	row.session = inst
 	row.tableName = table.Name()
 	row.rowKey = key
 	row.keyPrefix = row.tableName + "." + row.rowKey + "."
+	return row
+}
+
+func (inst *sessionImpl) GetRowRequired(table ptable.Table, key string) (ptable.Row, error) {
+	row := inst.GetRow(table, key)
+	if !row.Exists() {
+		name := table.Name() + "." + key
+		return nil, errors.New("object is not exists, row key=" + name)
+	}
 	return row, nil
 }
 
