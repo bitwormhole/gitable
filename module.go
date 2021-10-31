@@ -9,8 +9,8 @@ import (
 
 const (
 	myName     = "github.com/bitwormhole/ptable"
-	myVersion  = "v0.0.3"
-	myRevision = 3
+	myVersion  = "v0.0.4"
+	myRevision = 4
 )
 
 //go:embed src/main/resources
