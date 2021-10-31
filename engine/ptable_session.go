@@ -356,6 +356,14 @@ func (inst *sessionPropertiesWrapper) SetProperty(name string, value string) {
 	inst.update()
 }
 
+func (inst *sessionPropertiesWrapper) Getter() collection.PropertyGetter {
+	return collection.CreatePropertyGetter(inst)
+}
+
+func (inst *sessionPropertiesWrapper) Setter() collection.PropertySetter {
+	return collection.CreatePropertySetter(inst)
+}
+
 func (inst *sessionPropertiesWrapper) Clear() {
 	inst.inner.Clear()
 	inst.update()
